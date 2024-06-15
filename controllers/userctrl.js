@@ -28,48 +28,6 @@ const getlist = async (req, res) => {
     }
 }
 
-const userlogin = async(req,res) => {
-    try {
-        const {email ,password} = req.body;
-
-        //to get the user by email
-        const [userResult] = await db.query('SELECT * FROM user_tb WHERE email = ?', [email]);
-        
-        if (userResult.length === 0) {
-            return res.status(400).send({
-                success: false,
-                message: 'User is not signed up'
-            });
-        }
-
-        const user = userResult[0];
-
-        // Compare the entered password with the hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            return res.status(200).send({
-                success: false,
-                message: 'Invalid Email or Password'
-            });
-        } 
-            const token = jwt.sign({ id: user.id},process.env.JWT_SECRET, {expiresIn:'1d'})
-            res.status(200).send({
-                success:true,
-                message:'Login Success',
-                token:token
-            })
-    
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            success:false,
-            message:`Error in Login : ${error.message}`
-        })
-    }
-}
-
-
 const usersignup = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -114,6 +72,48 @@ const usersignup = async (req, res) => {
     }
 }
 
+const userlogin = async(req,res) => {
+    try {
+        const {email ,password} = req.body;
+
+        //to get the user by email
+        const [userResult] = await db.query('SELECT * FROM user_tb WHERE email = ?', [email]);
+        
+        if (userResult.length === 0) {
+            return res.status(400).send({
+                success: false,
+                message: 'User is not signed up'
+            });
+        }
+
+        const user = userResult[0];
+
+        // Compare the entered password with the hashed password
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(200).send({
+                success: false,
+                message: 'Invalid Email or Password'
+            });
+        } 
+            const token = jwt.sign({ id: user.id},process.env.JWT_SECRET, {expiresIn:'1d'})
+            res.status(200).send({
+                success:true,
+                message:'Login Success',
+                token:token
+            })
+    
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success:false,
+            message:`Error in Login : ${error.message}`
+        })
+    }
+}
+
+
 const authctrl = async(req, res)=>{
 try {
     const user = await db.query('SELECT * FROM user_tb WHERE id = ?',[req.body.id]);
@@ -127,7 +127,6 @@ try {
             success:true,
             data: user[0] 
         })
-
     }
 } catch (error) {
     console.log(error);
