@@ -7,7 +7,7 @@ const app = express()
 app.use(express.json())
 app.use(morgan('dev'))
 
-app.use('/api/medplus', require('./routes/userroutes'))
+app.use('/api/medplus/auth', require('./routes/userroutes'))
 
 pool.query('SELECT 1').then(()=> {
     //mysql 

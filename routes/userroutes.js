@@ -1,5 +1,5 @@
 const express = require("express");
-const { getlist, userlogin, usersignup, authctrl } = require("../controllers/userctrl");
+const { getlist, userlogin, usersignup, authctrl, deluser, resetpass } = require("../controllers/userctrl");
 const usermiddleware = require("../middlewares/usermiddleware");
 const router = express.Router();
 
@@ -12,9 +12,14 @@ router.post('/login', userlogin)
 //signup api
 router.post('/signup', usersignup)
 
-//Auth
-router.post('/userdata', usermiddleware, authctrl)
+//get auth patient
+router.get('/getpatient', usermiddleware, authctrl)
 
+//update or reset password
+router.put('/updatepass', usermiddleware, resetpass)
+
+//delete user profile
+router.delete('/delpatientprofile/:id', usermiddleware, deluser)
 
 
 module.exports = router

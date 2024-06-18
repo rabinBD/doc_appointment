@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require('dotenv');
 dotenv.config();//to load .env file
 
+//get patients list
 const getlist = async (req, res) => {
     try {
         const data = await db.query('SELECT * FROM user_tb')
@@ -28,6 +29,7 @@ const getlist = async (req, res) => {
     }
 }
 
+//signup controller
 const usersignup = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -38,7 +40,7 @@ const usersignup = async (req, res) => {
                 message: 'Provide all information'
             })
         }
-        
+
         const [exist_user] = await db.query('SELECT * FROM user_tb WHERE email = ?', [email]);
         if (exist_user.length > 0) {
             return res.status(401).send({
@@ -72,13 +74,14 @@ const usersignup = async (req, res) => {
     }
 }
 
-const userlogin = async(req,res) => {
+//login controller
+const userlogin = async (req, res) => {
     try {
-        const {email ,password} = req.body;
+        const { email, password } = req.body;
 
         //to get the user by email
         const [userResult] = await db.query('SELECT * FROM user_tb WHERE email = ?', [email]);
-        
+
         if (userResult.length === 0) {
             return res.status(400).send({
                 success: false,
@@ -94,47 +97,117 @@ const userlogin = async(req,res) => {
         if (!isMatch) {
             return res.status(200).send({
                 success: false,
-                message: 'Invalid Email or Password'
+                message: 'Invalid Password'
             });
-        } 
-            const token = jwt.sign({ id: user.id},process.env.JWT_SECRET, {expiresIn:'1d'})
-            res.status(200).send({
-                success:true,
-                message:'Login Success',
-                token:token
-            })
-    
+        }
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' })
+        res.status(200).send({
+            success: true,
+            message: 'Login Success',
+            token: token
+        })
+
     } catch (error) {
         console.log(error);
         res.status(500).send({
-            success:false,
-            message:`Error in Login : ${error.message}`
+            success: false,
+            message: `Error in Login : ${error.message}`
         })
     }
 }
 
-
-const authctrl = async(req, res)=>{
-try {
-    const user = await db.query('SELECT * FROM user_tb WHERE id = ?',[req.body.id]);
-    if(!user){
-        return res.status(200).send({
-            success:false,
-            message:'user not found'
+//authorization of patient through token 
+const authctrl = async (req, res) => {
+    try {
+        const user = await db.query('SELECT * FROM user_tb WHERE id = ?', [req.body.id]);
+        if (!user) {
+            return res.status(200).send({
+                success: false,
+                message: 'user not found'
+            })
+        } else {
+            res.status(200).send({
+                success: true,
+                data: user[0]
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            error
         })
-    }else{
+    }
+}
+
+//reset password controller
+const resetpass = async (req, res) => {
+    try {
+        const { email, newpassword } = req.body;
+
+        if (!email || !newpassword) {
+            return res.status(400).send({
+                success: false,
+                message: 'Provide all information'
+            })
+        }
+
+        const [user] = await db.query('SELECT * FROM user_tb WHERE email = ?', [email]);
+        if (user.length === 0) {
+            return res.status(401).send({
+                success: false,
+                message: 'User Not Found'
+            });
+        }
+        //using bcrypt for incyption of password
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(newpassword, salt);
+        req.body.password = hash;
+
+        const data = await db.query(`UPDATE user_tb SET password = ? WHERE password = ?)`, [hash,req.body.password])
+        if (!data) {
+            return res.status(404).send({
+                success: false,
+                message: 'Error occured during resetting'
+            })
+        }
+        res.status(201).send({
+            success: true,
+            message: 'Password has been reset Successfully'
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: 'Error in resetting password',
+            error
+        })
+    }
+}
+
+//delete user's profile controller
+const deluser = async (req, res) => {
+    try {
+        const p_id = req.params.id;
+        if (!p_id) {
+            return res.status(404).send({
+                success: false,
+                message: 'Please provide valid ID'
+            })
+        }
+        await db.query('DELETE FROM user_tb WHERE id = ?', [p_id])
         res.status(200).send({
-            success:true,
-            data: user[0] 
+            success: true,
+            messge: 'Patient profile Deleted successfully'
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            mesage: 'Error in deleting profile'
         })
     }
-} catch (error) {
-    console.log(error);
-    res.status(500).send({
-        success:false,
-        error
-    })
-}
 }
 
-module.exports = { getlist, userlogin, usersignup, authctrl};
+
+module.exports = { getlist, userlogin, usersignup, authctrl,resetpass, deluser };
