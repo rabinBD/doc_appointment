@@ -4,11 +4,15 @@ const pool = require('./config/db');
 const dotenv = require ('dotenv').config()
 const app = express()
 
+//middlewares
 app.use(express.json())
 app.use(morgan('dev'))
 
-app.use('/api/medplus/auth', require('./routes/userroutes'))
+//routes
+app.use('/api/medplus/auth', require('./routes/userroutes'));
+app.use('/api/medplus/admin',require('./routes/adminroutes'));
 
+//connection of Database and Server
 pool.query('SELECT 1').then(()=> {
     //mysql 
     console.log('Mysql_db connected');

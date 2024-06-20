@@ -141,49 +141,7 @@ const authctrl = async (req, res) => {
 }
 
 //reset password controller
-const resetpass = async (req, res) => {
-    try {
-        const { email, newpassword } = req.body;
 
-        if (!email || !newpassword) {
-            return res.status(400).send({
-                success: false,
-                message: 'Provide all information'
-            })
-        }
-
-        const [user] = await db.query('SELECT * FROM user_tb WHERE email = ?', [email]);
-        if (user.length === 0) {
-            return res.status(401).send({
-                success: false,
-                message: 'User Not Found'
-            });
-        }
-        //using bcrypt for incyption of password
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(newpassword, salt);
-        req.body.password = hash;
-
-        const data = await db.query(`UPDATE user_tb SET password = ? WHERE password = ?)`, [hash,req.body.password])
-        if (!data) {
-            return res.status(404).send({
-                success: false,
-                message: 'Error occured during resetting'
-            })
-        }
-        res.status(201).send({
-            success: true,
-            message: 'Password has been reset Successfully'
-        })
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            success: false,
-            message: 'Error in resetting password',
-            error
-        })
-    }
-}
 
 //delete user's profile controller
 const deluser = async (req, res) => {
@@ -210,4 +168,4 @@ const deluser = async (req, res) => {
 }
 
 
-module.exports = { getlist, userlogin, usersignup, authctrl,resetpass, deluser };
+module.exports = { getlist, userlogin, usersignup, authctrl, deluser };
