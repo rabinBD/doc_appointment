@@ -1,33 +1,10 @@
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const blacklist = require("../config/blacklist")
 const dotenv = require('dotenv');
 dotenv.config();//to load .env file
 
-//get patients list
-const getlist = async (req, res) => {
-    try {
-        const data = await db.query('SELECT * FROM user_tb')
-        if (!data) {
-            return res.status(400).send({
-                success: false,
-                message: 'no record found'
-            })
-        }
-        res.status(200).send({
-            success: true,
-            message: 'all record!',
-            data: data[0]
-        })
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            success: false,
-            message: 'error occur'
-        })
-    }
-}
 
 //signup controller
 const usersignup = async (req, res) => {
@@ -141,7 +118,18 @@ const authctrl = async (req, res) => {
 }
 
 //reset password controller
+const logoutuser = async(req, res) => {
+    const authHeader = await req.headers['authorization'];
+    const token = await authHeader.split(" ")[1];
 
+    // Add token to blacklist
+    blacklist.push(token);
+
+    res.status(200).send({
+        success: true,
+        message: 'Logged out successfully'
+    }); res.redirect('/login');
+}
 
 //delete user's profile controller
 const deluser = async (req, res) => {
@@ -168,4 +156,4 @@ const deluser = async (req, res) => {
 }
 
 
-module.exports = { getlist, userlogin, usersignup, authctrl, deluser };
+module.exports = {userlogin, usersignup, authctrl, deluser, logoutuser};

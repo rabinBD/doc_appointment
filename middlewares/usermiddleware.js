@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const blacklist = require('../config/blacklist');
 
 module.exports = async (req, res, next) => {
     try {
@@ -15,6 +16,13 @@ module.exports = async (req, res, next) => {
             return res.status(401).send({
                 success: false,
                 message: 'Token missing'
+            });
+        }
+
+        if (blacklist.includes(token)) {
+            return res.status(401).send({
+                success: false,
+                message: 'Token has been logged out'
             });
         }
 

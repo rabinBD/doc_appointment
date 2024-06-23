@@ -1,10 +1,8 @@
 const express = require("express");
-const { getlist, userlogin, usersignup, authctrl, deluser } = require("../controllers/userctrl");
+const {userlogin, usersignup, authctrl, deluser, logoutuser } = require("../controllers/userctrl");
 const usermiddleware = require("../middlewares/usermiddleware");
 const router = express.Router();
 
-//test api
-router.get('/list', getlist)
 
 //login api
 router.post('/login', userlogin)
@@ -17,6 +15,9 @@ router.get('/getpatient', usermiddleware, authctrl)
 
 //update or reset password
 // router.put('/updatepass', usermiddleware, resetpass)
+
+//logout user
+router.post('/logout', usermiddleware, logoutuser)
 
 //delete user profile
 router.delete('/delpatientprofile/:id', usermiddleware, deluser)
