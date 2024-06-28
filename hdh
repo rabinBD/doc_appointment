@@ -1,0 +1,45 @@
+app.post('/appointment', (req, res) => {
+  const { userId, doctorId, scheduleId, date, time, notes } = req.body;
+
+  // Check if all required fields are present
+  if (!userId || !doctorId || !scheduleId || !date || !time) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  // Start a transaction
+  db.beginTransaction((err) => {
+    if (err) {
+      return res.status(500).json({ error: 'Transaction error: ' + err.message });
+    }
+
+    // Insert the appointment
+    db.query('INSERT INTO Appointments (user_id, doctor_id, schedule_id, date, time, status, notes) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+      [userId, doctorId, scheduleId, date, time, 'pending', notes], (err, results) => {
+      if (err) {
+        return db.rollback(() => {
+          res.status(500).json({ error: 'Insert error: ' + err.message });
+        });
+      }
+
+      // Update the schedule status
+      db.query('UPDATE Schedules SET status = ? WHERE schedule_id = ?', ['booked', scheduleId], (err, updateResults) => {
+        if (err) {
+          return db.rollback(() => {
+            res.status(500).json({ error: 'Update error: ' + err.message });
+          });
+        }
+
+        // Commit the transaction
+        db.commit((err) => {
+          if (err) {
+            return db.rollback(() => {
+              res.status(500).json({ error: 'Commit error: ' + err.message });
+            });
+          }
+
+          res.status(201).json({ appointmentId: results.insertId });
+        });
+      });
+    });
+  });
+});

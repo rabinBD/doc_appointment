@@ -9,9 +9,9 @@ dotenv.config();//to load .env file
 //signup controller
 const usersignup = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, gender, contact, date_of_birth } = req.body;
 
-        if (!username || !email || !password) {
+        if (!username || !email || !password || !gender || !contact || !date_of_birth) {
             return res.status(400).send({
                 success: false,
                 message: 'Provide all information'
@@ -30,7 +30,7 @@ const usersignup = async (req, res) => {
         const hash = await bcrypt.hash(password, salt);
         req.body.password = hash;
 
-        const data = await db.query(`INSERT INTO user_tb(username,email,password) VALUES(?,?,?)`, [username, email, hash])
+        const data = await db.query(`INSERT INTO user_tb(username,email,password, gender, contact, date_of_birth) VALUES(?,?,?,?,?,?)`, [username, email, hash, "male" ||"female"||"other", contact, date_of_birth])
         if (!data) {
             return res.status(404).send({
                 success: false,
@@ -117,7 +117,7 @@ const authctrl = async (req, res) => {
     }
 }
 
-//reset password controller
+//logout controller
 const logoutuser = async(req, res) => {
     const authHeader = await req.headers['authorization'];
     const token = await authHeader.split(" ")[1];

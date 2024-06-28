@@ -93,8 +93,8 @@ const patienthomectrl = async (req, res) => {
 //add new doctors in the system
 const addDoc = async (req, res) => {
     try {
-        const { Dr_name, email, contact, specialities } = req.body;
-        if (!Dr_name || !email || !contact || !specialities) {
+        const { dr_name, email, password,contact,gender, speciality } = req.body;
+        if (!dr_name || !email || !password|| !contact ||!gender|| !speciality) {
             return res.status(400).send({
                 success: false,
                 message: 'Please provide all the details'
@@ -107,7 +107,7 @@ const addDoc = async (req, res) => {
                 message: 'doctor registered already'
             });
         }
-        const doc = await db.query('INSERT INTO doc_tb(Dr_name,email,contact, specialities) VALUES(?,?,?,?)', [Dr_name, email, contact, specialities]);
+        const doc = await db.query('INSERT INTO doc_tb(dr_name, email, password,contact,gender, speciality) VALUES(?,?,?,?,?,?)', [dr_name, email, password,contact,gender, speciality]);
         if (!doc) {
             return res.status(400).send({
                 success: false,

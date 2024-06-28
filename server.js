@@ -11,6 +11,9 @@ app.use(morgan('dev'))
 //routes
 app.use('/api/medplus/auth', require('./routes/userroutes'));
 app.use('/api/medplus/admin',require('./routes/adminroutes'));
+app.use('/api/medplus/appointment',require('./routes/appointmentroute'));
+app.use('/api/medplus/doctor',require('./routes/docroute'));
+
 
 //connection of Database and Server
 pool.query('SELECT 1').then(()=> {
@@ -23,6 +26,6 @@ pool.query('SELECT 1').then(()=> {
 }).catch((Error) =>{
     console.log(Error);
 });
-
+ 
 
 

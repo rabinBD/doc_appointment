@@ -1,5 +1,5 @@
 const express = require('express');
-const { logCtrl, dochomectrl, patienthomectrl, addDoc, delDoc} = require('../controllers/adminctrl');
+const { logCtrl, dochomectrl, patienthomectrl, addDoc, delDoc} = require('../controllers/adminCtrl');
 const router = express.Router();
 
 //login route
