@@ -1,8 +1,7 @@
-const db = require("../config/db");
-const {Admin,Doctor} = require("../models")
+const { admin, doctor, user } = require("../models")
 
 //for admin login
-const logCtrl = async (req, res) => {
+const loginCtrl = async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -12,16 +11,15 @@ const logCtrl = async (req, res) => {
                 message: 'Provide all information'
             })
         }
-      
-        const [refemail] = await db.query('SELECT * from admin_tb WHERE email = ?', [email]);
-        if (!refemail[0]) {
+
+        const adminCredential = await admin.findOne({ where: { email: email } })
+        if (!adminCredential) {
             return res.status(400).send({
                 success: false,
                 message: 'Invalid credentials'
             })
         }
-        const admin = refemail[0];
-        if (admin.password === password) {
+        else if (adminCredential.password === password) {
             return res.status(200).send({
                 success: true,
                 message: 'Admin logged Successfully'
@@ -42,9 +40,9 @@ const logCtrl = async (req, res) => {
 }
 
 //doctor page through admin's side
-const dochomectrl = async (req, res) => {
+const doctorHomeCtrl = async (req, res) => {
     try {
-        const data = await db.query('SELECT * FROM doc_tb')
+        const data = await doctor.findAll({})
         if (!data) {
             return res.status(400).send({
                 success: false,
@@ -54,8 +52,8 @@ const dochomectrl = async (req, res) => {
         res.status(200).send({
             success: true,
             message: 'all record!',
-            total: data[0].length,
-            data: data[0]
+            total: data.length,
+            data: data,
         })
 
     } catch (error) {
@@ -68,9 +66,9 @@ const dochomectrl = async (req, res) => {
 }
 
 //patient page through admin's side
-const patienthomectrl = async (req, res) => {
+const patientHomeCtrl = async (req, res) => {
     try {
-        const data = await db.query('SELECT * FROM user_tb')
+        const data = await user.findAll({})
         if (!data) {
             return res.status(400).send({
                 success: false,
@@ -80,8 +78,8 @@ const patienthomectrl = async (req, res) => {
         res.status(200).send({
             success: true,
             message: 'all record!',
-            total: data[0].length,
-            data: data[0]
+            total: data.length,
+            data: data,
         })
 
     } catch (error) {
@@ -94,28 +92,26 @@ const patienthomectrl = async (req, res) => {
 }
 
 //add new doctors in the system
-const addDoc = async (req, res) => {
+const addDoctor = async (req, res) => {
     try {
-        const { dr_name, email, password,contact,gender, speciality } = req.body;
-        if (!dr_name || !email || !password|| !contact ||!gender|| !speciality) {
+        const { doctorName, email, password, contact, gender, speciality } = req.body;
+        const createdAt = new Date()
+        if (!doctorName || !email || !password || !contact || !gender || !speciality) {
             return res.status(400).send({
                 success: false,
                 message: 'Please provide all the details'
             })
         }
-        const adminDb = await Doctor.create({email,password});
-        if(adminDb){
-            
-        }
-        const [exist_doc] = await db.query('SELECT * FROM doc_tb WHERE email = ?', [email]);
-        if (exist_doc.length > 0) {
+
+        const doctorExist = await doctor.findOne({where:{email: email}})
+        if (doctorExist) {
             return res.status(401).send({
                 success: false,
                 message: 'doctor registered already'
             });
         }
-        const doc = await db.query('INSERT INTO doc_tb(dr_name, email, password,contact,gender, speciality) VALUES(?,?,?,?,?,?)', [dr_name, email, password,contact,gender, speciality]);
-        if (!doc) {
+        const doctorRegister = await doctor.create({doctorName, email, password, contact, gender, speciality,createdAt})
+        if (!doctorRegister) {
             return res.status(400).send({
                 success: false,
                 message: 'error!'
@@ -135,7 +131,7 @@ const addDoc = async (req, res) => {
 }
 
 //delete existing doctor from system
-const delDoc = async (req, res) => {
+const deleteDoctor = async (req, res) => {
     try {
         const id = req.params.id;
         if (!id) {
@@ -144,7 +140,7 @@ const delDoc = async (req, res) => {
                 message: 'Please provide valid ID'
             })
         }
-        await db.query('DELETE FROM doc_tb WHERE D_id = ?', [id])
+        await doctor.destroy({where:{id: id}})
         res.status(200).send({
             success: true,
             messge: 'Doctor profile Deleted successfully'
@@ -158,4 +154,4 @@ const delDoc = async (req, res) => {
     }
 }
 
-module.exports = { logCtrl, dochomectrl, patienthomectrl, addDoc, delDoc }
+module.exports = { loginCtrl, doctorHomeCtrl, patientHomeCtrl, addDoctor, deleteDoctor }

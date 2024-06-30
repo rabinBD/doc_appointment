@@ -10,25 +10,32 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       email:{
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       password:{
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       gender:{
-        type: Sequelize.ENUM('male','female','other')
+        type: Sequelize.ENUM('male','female','other'),
+        allowNull: false
       },
       contact:{
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       dateOfBirth:{
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATEONLY,
+        allowNull: false
       },
       createdAt: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
     });
   },

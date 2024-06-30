@@ -1,18 +1,24 @@
 require('dotenv').config();
 const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors')
 const { sequelize } = require('./models');
 
 const app = express();
-const port = process.env.PORT || 3000;
 
+//initiating middleware for server
 app.use(express.json());
+app.use(morgan('dev')),
+app.use(cors());
 
-// Root route
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+//router setup 
+app.use('/api/medplus/patient', require('./routes/userRoutes'));
+app.use('/api/medplus/admin', require('./routes/adminRoute'));
+app.use('/api/medplus/doctor', require('./routes/doctorRoute'));
+app.use('/api/medplus/appointment', require('./routes/appointmentRoute'));
 
 // Start the server and connect to the database
+const port = process.env.PORT || 3000;
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
   try {
@@ -23,4 +29,5 @@ app.listen(port, async () => {
   }
 });
 
-module.exports = app;
+// module.exports = app;
+ 

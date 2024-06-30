@@ -1,6 +1,7 @@
 const express = require("express");
-const {userlogin, usersignup, authctrl, deluser, logoutuser } = require("../controllers/userctrl");
+
 const usermiddleware = require("../middlewares/usermiddleware");
+const { userlogin, usersignup, authctrl, logoutuser, deleteUser } = require("../controllers/userctrl");
 const router = express.Router();
 
 
@@ -20,7 +21,7 @@ router.get('/getpatient', usermiddleware, authctrl)
 router.post('/logout', usermiddleware, logoutuser)
 
 //delete user profile
-router.delete('/delpatientprofile/:id', usermiddleware, deluser)
+router.delete('/delpatientprofile/:id', usermiddleware, deleteUser)
 
 
 module.exports = router

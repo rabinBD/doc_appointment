@@ -14,10 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   appointment.init({
-    userId:DataTypes.INTEGER
+    userId:{type:DataTypes.INTEGER,allowNull:false},
+    doctorId:{type:DataTypes.INTEGER,allowNull:false},
+    scheduleId:{type:DataTypes.INTEGER,allowNull:false},
+    date:{type:DataTypes.DATEONLY,allowNull:false},
+    time:{type:DataTypes.TIME,allowNull:false},
+    status:{type:DataTypes.ENUM('pending','confirmed','cancelled'),allowNull:false},
+    notes:{type:DataTypes.TEXT},
+    createdAt:{type:DataTypes.DATE,allowNull:false},
   }, {
     sequelize,
     modelName: 'appointment',
+    timestamps:false
   });
   return appointment;
 };

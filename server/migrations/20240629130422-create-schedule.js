@@ -14,6 +14,7 @@ module.exports = {
         references: {
           model: 'doctors', // This is the name of the table
           key: 'id', // This is the column name of the referenced table
+          onUpdate: 'cascade'
         },
         type: Sequelize.INTEGER,
       },

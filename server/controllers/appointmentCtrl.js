@@ -59,7 +59,7 @@ const appointment = async (req, res) => {
 }
 
 //approved or rejected by doctor
-const doc_res = async (req, res) => {
+const doctorResponse = async (req, res) => {
     try {
 
         const { status, ap_id, D_id } = req.body;
@@ -91,35 +91,4 @@ const doc_res = async (req, res) => {
 }
 
 
-//approved or rejected by admin
-// const admin_res = async (req, res) => {
-//     try {
-//         const { status, ap_id } = req.body;
-//         if (!status) {
-//             return res.status(400).send({
-//                 success: false,
-//                 message: 'please choose status'
-//             })
-//         }
-//         const doc = await db.query('UPDATE appointment_tb SET status = ? WHERE ap_id = ? ', [status, ap_id]);
-
-//         if (!doc) {
-//             return res.status(400).send({
-//                 success: false,
-//                 messsage: 'Appointment not found or not authorized'
-//             })
-//         }
-//         return res.status(200).send({
-//             success: true,
-//             message: 'Appointment status updated '
-//         });
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).send({
-//             success: false,
-//             message: 'Error Occured'
-//         })
-//     }
-// }
-
-module.exports = { appointment, doc_res };
+module.exports = { appointment, doctorResponse};

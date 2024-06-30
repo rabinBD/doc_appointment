@@ -1,7 +1,7 @@
 const db = require("../config/db");
 
 //doctor login in their page
-const drlogCtrl = async (req, res) => {
+const doctorloginCtrl = async (req, res) => {
     try {
         const {email, password } = req.body;
         if (!email || !password) {
@@ -69,4 +69,4 @@ const schedule = async (req, res) => {
     }
 }
 
-module.exports = {schedule, drlogCtrl}
+module.exports = {schedule, doctorloginCtrl }

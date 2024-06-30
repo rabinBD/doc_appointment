@@ -14,10 +14,38 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   doctor.init({
-    Dr_name: DataTypes.STRING
+    doctorName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    contact: {
+      type: DataTypes.INTEGER(10),
+      allowNull: false
+    },
+    gender: {
+      type: DataTypes.ENUM('male', 'female', 'other'),
+      allowNull: false
+    },
+    speciality: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'doctor',
+    timestamps: false
   });
   return doctor;
 };

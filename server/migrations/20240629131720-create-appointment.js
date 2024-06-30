@@ -18,6 +18,7 @@ module.exports = {
         references: {
           model: 'users', // This is the name of the table
           key: 'id', // This is the column name of the referenced table
+          onUpdate: 'cascade'
         }
       },
       doctorId:{
@@ -25,6 +26,7 @@ module.exports = {
         references: {
           model: 'doctors', // This is the name of the table
           key: 'id', // This is the column name of the referenced table
+          onUpdate: 'cascade'
         },
         type: Sequelize.INTEGER,
       },
@@ -33,6 +35,7 @@ module.exports = {
         references: {
           model: 'schedules', // This is the name of the table
           key: 'id', // This is the column name of the referenced table
+          onUpdate: 'cascade'
         },
         type: Sequelize.INTEGER
       },

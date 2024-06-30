@@ -1,9 +1,9 @@
 const express = require ('express');
-const {schedule, drlogCtrl} = require('../controllers/docCtrl');
+const {schedule, doctorloginCtrl} = require('../controllers/doctorCtrl');
 const router = express.Router()
 
 //doctor login 
-router.post('/login', drlogCtrl)
+router.post('/login', doctorloginCtrl)
 
 //doctor manage schedule
 router.post('/schedule', schedule)

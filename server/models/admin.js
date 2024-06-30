@@ -14,10 +14,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   admin.init({
-    email: DataTypes.STRING
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'admin',
+    timestamps: false
   });
   return admin;
 };

@@ -1,103 +1,106 @@
-const db = require("../config/db");
+const {user} = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const blacklist = require("../config/blacklist")
 const dotenv = require('dotenv');
 dotenv.config();//to load .env file
 
-
 //signup controller
 const usersignup = async (req, res) => {
     try {
-        const { username, email, password, gender, contact, date_of_birth } = req.body;
+        const { name, email, password: plainPassword, gender, contact, dateOfBirth } = req.body;
+        const createdAt = new Date();
 
-        if (!username || !email || !password || !gender || !contact || !date_of_birth) {
+        if (!name || !email || !plainPassword || !gender || !contact || !dateOfBirth) {
             return res.status(400).send({
                 success: false,
-                message: 'Provide all information'
-            })
-        }
-
-        const [exist_user] = await db.query('SELECT * FROM user_tb WHERE email = ?', [email]);
-        if (exist_user.length > 0) {
-            return res.status(401).send({
-                success: false,
-                message: 'User signup already'
+                message: 'Please provide all required information'
             });
         }
-        //using bcrypt for incyption of password
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(password, salt);
-        req.body.password = hash;
 
-        const data = await db.query(`INSERT INTO user_tb(username,email,password, gender, contact, date_of_birth) VALUES(?,?,?,?,?,?)`, [username, email, hash, "male" ||"female"||"other", contact, date_of_birth])
-        if (!data) {
-            return res.status(404).send({
+        const exist_user = await user.findOne({ where: { email } });
+        if (exist_user) {
+            return res.status(200).send({
                 success: false,
-                message: 'Error occured during signup'
-            })
+                message: 'User already signed up, please login'
+            });
         }
+
+        // Using bcrypt for encryption of password
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(plainPassword, salt);
+
+        const NewUser = await user.create({ name, email, password: hash, gender, contact, dateOfBirth, createdAt });
+        if (!NewUser) {
+            return res.status(500).send({
+                success: false,
+                message: 'Error occurred during signup'
+            });
+        }
+
         res.status(201).send({
             success: true,
             message: 'New user created in MedPlus'
-        })
+        });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).send({
             success: false,
-            message: 'signup error occured',
-            error
-        })
+            message: 'Signup error occurred',
+            error: error.message
+        });
     }
-}
+};
+
 
 //login controller
 const userlogin = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        //to get the user by email
-        const [userResult] = await db.query('SELECT * FROM user_tb WHERE email = ?', [email]);
+        // Get the user by email
+        const existingUser = await user.findOne({ where: { email: email } });
 
-        if (userResult.length === 0) {
+        if (!existingUser) {
             return res.status(400).send({
                 success: false,
                 message: 'User is not signed up'
             });
         }
 
-        const user = userResult[0];
-
         // Compare the entered password with the hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, existingUser.password);
 
         if (!isMatch) {
-            return res.status(200).send({
+            return res.status(401).send({
                 success: false,
                 message: 'Invalid Password'
             });
         }
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' })
+
+        const token = jwt.sign({ id: existingUser.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        
         res.status(200).send({
             success: true,
             message: 'Login Success',
             token: token
-        })
+        });
 
     } catch (error) {
         console.log(error);
         res.status(500).send({
             success: false,
-            message: `Error in Login : ${error.message}`
-        })
+            message: `Error in Login: ${error.message}`
+        });
     }
-}
+};
+
 
 //authorization of patient through token 
 const authctrl = async (req, res) => {
     try {
-        const user = await db.query('SELECT * FROM user_tb WHERE id = ?', [req.body.id]);
-        if (!user) {
+        const IsUser = await user.findAll({where:{id : req.body.id}})
+        if (!IsUser) {
             return res.status(200).send({
                 success: false,
                 message: 'user not found'
@@ -105,7 +108,7 @@ const authctrl = async (req, res) => {
         } else {
             res.status(200).send({
                 success: true,
-                data: user[0]
+                data: IsUser[0]
             })
         }
     } catch (error) {
@@ -118,7 +121,7 @@ const authctrl = async (req, res) => {
 }
 
 //logout controller
-const logoutuser = async(req, res) => {
+const logoutuser = async (req, res) => {
     const authHeader = await req.headers['authorization'];
     const token = await authHeader.split(" ")[1];
 
@@ -132,7 +135,7 @@ const logoutuser = async(req, res) => {
 }
 
 //delete user's profile controller
-const deluser = async (req, res) => {
+const deleteUser = async (req, res) => {
     try {
         const p_id = req.params.id;
         if (!p_id) {
@@ -141,7 +144,7 @@ const deluser = async (req, res) => {
                 message: 'Please provide valid ID'
             })
         }
-        await db.query('DELETE FROM user_tb WHERE id = ?', [p_id])
+        await user.destroy({where:{id: p_id}})
         res.status(200).send({
             success: true,
             messge: 'Patient profile Deleted successfully'
@@ -156,4 +159,4 @@ const deluser = async (req, res) => {
 }
 
 
-module.exports = {userlogin, usersignup, authctrl, deluser, logoutuser};
+module.exports = { userlogin, usersignup, authctrl, deleteUser, logoutuser };
