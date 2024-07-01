@@ -1,4 +1,3 @@
-// const { DATE } = require('sequelize');
 const { doctor, schedule } = require('../models')
 
 //doctor login in their page
@@ -11,6 +10,8 @@ const doctorloginCtrl = async (req, res) => {
                 message: 'Provide all information'
             })
         }
+
+        //verify the doctor
         const checkEmail = await doctor.findOne({ where: { email: email } })
         if (!checkEmail) {
             return res.status(400).send({
@@ -29,11 +30,12 @@ const doctorloginCtrl = async (req, res) => {
                 message: 'You are unauthorized to access'
             })
         }
+
     } catch (error) {
         console.log(error);
         res.status(501).send({
             success: false,
-            message: 'Error occured'
+            message: 'Error occured' 
         })
     }
 }
