@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
+
   schedule.init({
     doctorId: {
       type: DataTypes.INTEGER,
@@ -20,8 +21,6 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'doctor',
         key: 'id',
-        onUpdate: 'cascade',
-        onDelete: 'cascade'
       }
     },
     date: {

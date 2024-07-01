@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
+  
   appointment.init({
     userId: {
       type: DataTypes.INTEGER,
