@@ -158,6 +158,7 @@ const deleteUser = async (req, res) => {
 
 const getDoctorSchedule = async (req, res) => {
     try {
+
         //finding the user
         const p_id = req.params.id;
         const { scheduleId, doctorId } = req.body;
@@ -167,12 +168,14 @@ const getDoctorSchedule = async (req, res) => {
                 message: 'Please provide valid ID'
             })
         }
+
+        //check the same patient is trying to re-appoint
         const IsUser = await user.findOne({ where: { id: p_id } })
         if (!IsUser) {
             return res.status(404).send({ message: 'something went wrong!' })
         }
 
-        //fething the schdule data to user
+        //fething the schedule data to user
         const getDoctor = await schedule.findAll({ where: { id: scheduleId, doctorId: doctorId } })
         if (!getDoctor) {
             return res.status(404).send({ message: 'error in getting doctor' })
