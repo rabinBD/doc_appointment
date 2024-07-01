@@ -1,7 +1,7 @@
 const express = require("express");
 
 const usermiddleware = require("../middlewares/usermiddleware");
-const { userlogin, usersignup, authctrl, logoutuser, deleteUser } = require("../controllers/userctrl");
+const { userlogin, usersignup, authctrl, logoutuser, deleteUser, getDoctorSchedule } = require("../controllers/userctrl");
 const router = express.Router();
 
 
@@ -11,8 +11,11 @@ router.post('/login', userlogin)
 //signup api
 router.post('/signup', usersignup)
 
-//get auth patient
+//get auth patient // to test 
 router.get('/getpatient', usermiddleware, authctrl)
+
+//get doctor's schedule 
+router.get('/:id/doctorSchedule', usermiddleware, getDoctorSchedule)
 
 //update or reset password
 // router.put('/updatepass', usermiddleware, resetpass)

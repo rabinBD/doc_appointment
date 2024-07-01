@@ -15,7 +15,7 @@ app.use(cors());
 app.use('/api/medplus/patient', require('./routes/userRoutes'));
 app.use('/api/medplus/admin', require('./routes/adminRoute'));
 app.use('/api/medplus/doctor', require('./routes/doctorRoute'));
-app.use('/api/medplus/appointment', require('./routes/appointmentRoute'));
+app.use('/api/medplus/patient/appointment', require('./routes/appointmentRoute'));
 
 // Start the server and connect to the database
 const port = process.env.PORT || 3000;
@@ -29,5 +29,5 @@ app.listen(port, async () => {
   }
 });
 
-// module.exports = app;
+
  

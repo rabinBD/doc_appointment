@@ -14,16 +14,41 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   schedule.init({
-    doctorId:{type:DataTypes.INTEGER,allowNull:false},
-    date: {type:DataTypes.DATEONLY,allowNull:false},
-    startTime: {type:DataTypes.TIME,allowNull:false},
-    endTime: {type:DataTypes.TIME,allowNull:false},
-    createdAt: {type:DataTypes.DATE,allowNull:false},
-    status: {type:DataTypes.ENUM('available','booked','unavailable'),allowNull:false},
+    doctorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'doctor',
+        key: 'id',
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
+      }
+    },
+    date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
+    startTime: {
+      type: DataTypes.TIME,
+      allowNull: false
+    },
+    endTime: {
+      type: DataTypes.TIME,
+      allowNull: false
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    status: {
+      type: DataTypes.ENUM('available', 'booked', 'unavailable'),
+      defaultValue: 'unavailable',
+      allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'schedule',
-    TIMESTAMP: false
+    timestamps: false
   });
   return schedule;
 };

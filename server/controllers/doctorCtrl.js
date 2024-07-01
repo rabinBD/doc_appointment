@@ -1,24 +1,24 @@
-const db = require("../config/db");
+// const { DATE } = require('sequelize');
+const { doctor, schedule } = require('../models')
 
 //doctor login in their page
 const doctorloginCtrl = async (req, res) => {
     try {
-        const {email, password } = req.body;
+        const { email, password } = req.body;
         if (!email || !password) {
             return res.status(400).send({
                 success: false,
                 message: 'Provide all information'
             })
         }
-        const [refemail] = await db.query('SELECT * from doc_tb WHERE email = ?', [email]);
-        if (!refemail[0]) {
+        const checkEmail = await doctor.findOne({ where: { email: email } })
+        if (!checkEmail) {
             return res.status(400).send({
                 success: false,
                 message: 'Invalid credentials'
             })
         }
-        const doctor = refemail[0];
-        if (doctor.password === password) {
+        if (checkEmail.password === password) {
             return res.status(200).send({
                 success: true,
                 message: 'doctor logged Successfully'
@@ -39,25 +39,26 @@ const doctorloginCtrl = async (req, res) => {
 }
 
 //doctor manages their schedule
-const schedule = async (req, res) => {
+const scheduleManage = async (req, res) => {
     try {
-        const {D_id, date_, start_time, end_time} = req.body;
-        if (!D_id || !date_ || !start_time || !end_time) {
+        const { doctorId, date, startTime, endTime, status } = req.body;
+        const createdAt = new Date()
+        if ( !date || !startTime || !endTime || !status) {
             return res.status(400).send({
-                success: false, 
+                success: false,
                 message: 'provide all schedule data'
             })
         }
-        const user = await db.query('INSERT INTO schedule_tb(D_id, date_, start_time, end_time, status) VALUES(?,?,?,?,?)',[D_id, date_, start_time, end_time, "available"]);
-        if(!user){
+        const insertSchedule = await schedule.create({doctorId, date, startTime, endTime,createdAt,status})
+        if (!insertSchedule) {
             return res.status(400).send({
-                success:false,
-                message:'unable to load schedule'
+                success: false,
+                message: 'unable to load schedule'
             })
-        }else{
+        } else {
             return res.status(200).send({
-                success:true,
-                message:'schedule uploaded'
+                success: true,
+                message: 'schedule uploaded'
             })
         }
     } catch (error) {
@@ -69,4 +70,4 @@ const schedule = async (req, res) => {
     }
 }
 
-module.exports = {schedule, doctorloginCtrl }
+module.exports = { scheduleManage, doctorloginCtrl }

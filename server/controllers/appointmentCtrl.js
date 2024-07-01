@@ -1,59 +1,74 @@
-const db = require("../config/db");
-// const nodemailer = require("nodemailer")
+const { schedule, appointment, notification } = require('../models')
 
 //creating an appointment
-const appointment = async (req, res) => {
+const Issueappointment = async (req, res) => {
     try {
-        const { id } = req.user;
-        const { D_id, s_id, date_, _time, notes } = req.body;
-        if (!id || !D_id || !s_id || !date_ || !_time || !notes) {
+        const { userId, doctorId, scheduleId, date, time, notes } = req.body;
+        let createdAt = new Date()
+        if (!date || !time || !notes) {
             return res.status(400).send({
                 success: false,
                 message: 'Provide all information'
             })
         }
-        
-        const check = await db.query('SELECT * FROM schedule_tb WHERE s_id = ? AND D_id = ?', [s_id, D_id])
-        if (!check) {
-            return res.status(500).send(error);
+        const IsUserExist = await appointment.findOne({userId: userId})
+        if(IsUserExist){
+            return res.status(200).send({
+                success:false,
+                message:'Your appointment has been placed already'
+            })
         }
-        if (check.length === 0) {
-            return res.status(404).send('Schedule not found');
+        //check for the schedule
+        const check = await schedule.findOne({ where: { id: scheduleId, doctorId: doctorId } })
+        if (!check) {
+            return res.status(404).send({message:'Schedule not found'});
         }
 
-        const user = await db.query('INSERT INTO appointment_tb (id, D_id, s_id, date_, _time, status, notes) VALUES(?,?,?,?,?,?,?)', [id, D_id, s_id, date_, _time, 'pending', notes]);
+        //if schedule is free create an appointment
+        const user = await appointment.create({ userId, doctorId, scheduleId, date, time, status: 'pending', notes, createdAt })
         if (!user) {
-            return res.rollback((err) => {
-                res.status(400).send({ message: 'insert error occured' + err })
+            return res.status(400).send({
+                message: 'insert error occured'
             })
         }
 
         // Send notification to doctor
-        sendNotification(D_id, `New appointment request for ${date_} at ${_time}`);
+        // await notification.create({
+        //     doctorId: doctorId,
+        //     message: `New appointment request for ${date} at ${time}`
+        // });
 
-        const user1 = await db.query('UPDATE schedule_tb SET status = ? WHERE s_id = ?', ['booked', s_id])
-        if (!user1) {
-            return res.rollback((err) => {
-                res.status(400).send({ message: 'update error occured' + err })
-            })
+        //update the schedule concurrently for the data integrity
+        const updateSchedule = await schedule.update(
+            { status: 'booked' },
+            { where: { status : available, id: scheduleId} }
+        )
+        if (!updateSchedule) {
+            return res.status(400).send({ message: 'update error occured' })
         }
+
+        //if all process true appointment registered
         return res.status(200).send({
             success: true,
             message: 'appointment registered successfully'
         })
 
+
         // Function to send notification
-        function sendNotification(D_id, message) {
-            db.query('INSERT INTO Notifications (doctor_id, message) VALUES (?, ?)', [D_id, message], (error, results) => {
-                if (error) console.error(error);
-                else console.log('Notification sent');
-            });
-        }
+        // async function sendNotification(doctorId, message) {
+        //     try {
+        //         await notification.create({ doctorId: doctorId, message });
+        //         console.log('Notification sent');
+        //     } catch (error) {
+        //         console.error(error);
+        //     }
+        // }
+
     } catch (error) {
         console.log(error);
         res.status(501).send({
             success: false,
-            message: 'Error Occured' + error
+            message: 'Error Occured' +error
         })
     }
 }
@@ -62,16 +77,18 @@ const appointment = async (req, res) => {
 const doctorResponse = async (req, res) => {
     try {
 
-        const { status, ap_id, D_id } = req.body;
-        if (!D_id || !status || !ap_id) {
+        const { status, appointmentId, doctorId } = req.body;
+        if (!status) {
             return res.status(400).send({
                 success: false,
-                message: 'Provide all information'
+                message: 'Provide status'
             })
         }
-        const doc = await db.query('UPDATE appointment_tb SET status = ? WHERE ap_id = ? AND D_id = ?', [status, ap_id, D_id]);
+        const result = await appointment.update({status: status},
+            {where:{id: appointmentId, doctorId: doctorId}}
+        )
 
-        if (!doc) {
+        if (!result) {
             return res.status(400).send({
                 success: false,
                 messsage: 'Appointment not found or not authorized'
@@ -91,4 +108,4 @@ const doctorResponse = async (req, res) => {
 }
 
 
-module.exports = { appointment, doctorResponse};
+module.exports = { Issueappointment, doctorResponse };
