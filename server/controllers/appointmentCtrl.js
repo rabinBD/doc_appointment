@@ -11,6 +11,7 @@ const Issueappointment = async (req, res) => {
                 message: 'Provide all information'
             })
         }
+
         const IsUserExist = await appointment.findOne({userId: userId})
         if(IsUserExist){
             return res.status(200).send({
@@ -18,6 +19,7 @@ const Issueappointment = async (req, res) => {
                 message:'Your appointment has been placed already'
             })
         }
+
         //check for the schedule
         const check = await schedule.findOne({ where: { id: scheduleId, doctorId: doctorId } })
         if (!check) {
@@ -31,12 +33,6 @@ const Issueappointment = async (req, res) => {
                 message: 'insert error occured'
             })
         }
-
-        // Send notification to doctor
-        // await notification.create({
-        //     doctorId: doctorId,
-        //     message: `New appointment request for ${date} at ${time}`
-        // });
 
         //update the schedule concurrently for the data integrity
         const updateSchedule = await schedule.update(
@@ -52,17 +48,6 @@ const Issueappointment = async (req, res) => {
             success: true,
             message: 'appointment registered successfully'
         })
-
-
-        // Function to send notification
-        // async function sendNotification(doctorId, message) {
-        //     try {
-        //         await notification.create({ doctorId: doctorId, message });
-        //         console.log('Notification sent');
-        //     } catch (error) {
-        //         console.error(error);
-        //     }
-        // }
 
     } catch (error) {
         console.log(error);
@@ -98,6 +83,7 @@ const doctorResponse = async (req, res) => {
             success: true,
             message: 'Appointment status updated by doctor'
         });
+
     } catch (error) {
         console.log(error);
         res.status(500).send({
