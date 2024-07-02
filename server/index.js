@@ -12,7 +12,7 @@ app.use(morgan('dev')),
 app.use(cors());
 
 //router setup 
-app.use('/api/medplus/patient', require('./routes/userRoutes'));
+app.use('/api/medplus/patient', require('./routes/userroutes'));
 app.use('/api/medplus/admin', require('./routes/adminRoute'));
 app.use('/api/medplus/doctor', require('./routes/doctorRoute'));
 app.use('/api/medplus/patient/appointment', require('./routes/appointmentRoute'));

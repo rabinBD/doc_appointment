@@ -1,7 +1,7 @@
 const express = require("express");
 
 const usermiddleware = require("../middlewares/usermiddleware");
-const { userlogin, usersignup, authctrl, logoutuser, deleteUser, getDoctorSchedule } = require("../controllers/userctrl");
+const { userlogin, usersignup, authctrl, logoutuser, deleteUser, getDoctorSchedule, editPatientProfile } = require("../controllers/userctrl");
 const router = express.Router();
 
 
@@ -22,6 +22,9 @@ router.post('/logout', usermiddleware, logoutuser)
 
 //delete user profile
 router.delete('/delpatientprofile/:id', usermiddleware, deleteUser)
+
+//edit the patient profile
+router.put('/:id/editProfile', usermiddleware, editPatientProfile)
 
 
 module.exports = router

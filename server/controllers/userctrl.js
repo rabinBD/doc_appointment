@@ -156,6 +156,7 @@ const deleteUser = async (req, res) => {
     }
 }
 
+//to get doctor schedule
 const getDoctorSchedule = async (req, res) => {
     try {
 
@@ -194,4 +195,51 @@ const getDoctorSchedule = async (req, res) => {
     }
 }
 
-module.exports = { userlogin, usersignup, authctrl, deleteUser, logoutuser, getDoctorSchedule };
+//to edit the patient profile
+const editPatientProfile = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const userProfile = await user.findOne({ where: { id: id } });
+
+        if (!userProfile) {
+            return res.status(404).send({
+                success: false,
+                message: 'Invalid Id'
+            });
+        }
+
+        const { name, email, contact } = req.body;
+        const updateFields = {};
+
+        if (name) updateFields.name = name;
+        if (email) updateFields.email = email;
+        if (contact) updateFields.contact = contact;
+
+        if (Object.keys(updateFields).length > 0) {
+            try {
+                await user.update(updateFields, { where: { id: id } });
+                return res.status(200).send({
+                    message: 'Profile updated successfully'
+                });
+            } catch (error) {
+                return res.status(400).send({
+                    success: false,
+                    message: error.message
+                });
+            }
+        } else {
+            return res.status(400).send({
+                success: false,
+                message: 'No fields to update'
+            });
+        }
+    } catch (error) {
+        return res.status(500).send({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+
+module.exports = { userlogin, usersignup, authctrl, deleteUser, logoutuser, getDoctorSchedule, editPatientProfile };
