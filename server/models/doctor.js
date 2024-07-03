@@ -16,31 +16,36 @@ module.exports = (sequelize, DataTypes) => {
   doctor.init({
     doctorName: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull:false
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false
+      unique: true
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull:false
     },
     contact: {
-      type: DataTypes.INTEGER(10),
-      allowNull: false
+      type: DataTypes.BIGINT,
+      allowNull:false
     },
     gender: {
       type: DataTypes.ENUM('male', 'female', 'other'),
-      allowNull: false
+      allowNull:false
     },
     speciality: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull:false
+    },
+    fees:{
+      type: DataTypes.DOUBLE,
+      allowNull:false
     },
     createdAt: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull:false,
+      defaultValue: DataTypes.NOW,
     },
   }, {
     sequelize,

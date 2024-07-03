@@ -16,29 +16,34 @@ module.exports = (sequelize, DataTypes) => {
   user.init({
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false
+      
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      
     },
     gender: {
       type: DataTypes.ENUM('male', 'female', 'other'),
-      allowNull: false
+      allowNull: false,
     },
     contact: {
-      type: DataTypes.INTEGER(10),
-      allowNull: false
+      type: DataTypes.BIGINT,
+      allowNull: false,
     },
     dateOfBirth: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    createdAt: { type: DataTypes.DATE,},
+    createdAt: { 
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
   }, {
     sequelize,
     modelName: 'user',

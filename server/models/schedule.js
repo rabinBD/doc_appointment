@@ -21,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'doctor',
         key: 'id',
+        onUpdate: 'cascade',
+        onDelete: 'cascade',
       }
     },
     date: {
@@ -37,7 +39,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     createdAt: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
     status: {
       type: DataTypes.ENUM('available', 'booked', 'unavailable'),

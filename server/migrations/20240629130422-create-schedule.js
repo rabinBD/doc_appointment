@@ -14,7 +14,8 @@ module.exports = {
         references: {
           model: 'doctors', // This is the name of the table
           key: 'id', // This is the column name of the referenced table
-          onUpdate: 'cascade'
+          onUpdate: 'cascade',
+          onDelete: 'cascade',
         },
         type: Sequelize.INTEGER,
       },
@@ -32,7 +33,8 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
       status: {
         allowNull: false,

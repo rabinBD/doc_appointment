@@ -13,37 +13,60 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  
+
   appointment.init({
     userId: {
+      allowNull: false,
       type: DataTypes.INTEGER,
-      allowNull: false
+      references: {
+        model: 'users', // This is the name of the table
+        key: 'id', // This is the column name of the referenced table
+        onUpdate: 'cascade',
+        onDelete: 'cascade',
+      }
     },
-    doctorId: {
+    doctorId:{
+      allowNull: false,
+      references: {
+        model: 'doctors', // This is the name of the table
+        key: 'id', // This is the column name of the referenced table
+        onUpdate: 'cascade',
+        onDelete: 'cascade',
+      },
       type: DataTypes.INTEGER,
-      allowNull: false
     },
-    scheduleId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+    scheduleId:{
+      allowNull: false,
+      references: {
+        model: 'schedules', // This is the name of the table
+        key: 'id', // This is the column name of the referenced table
+        onUpdate: 'cascade',
+        onDelete: 'cascade',
+      },
+      type: DataTypes.INTEGER
     },
     date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: false,
+      type: DataTypes.DATEONLY
     },
-    time: {
-      type: DataTypes.TIME,
-      allowNull: false
+    time:{
+      allowNull: false,
+      type: DataTypes.TIME
     },
-    status: {
-      type: DataTypes.ENUM('pending', 'confirmed', 'cancelled'),
-      allowNull: false
+    status:{
+      allowNull: false,
+      type: DataTypes.ENUM('pending','confirmed','cancelled') ,
+      defaultValue: 'pending',
     },
-    notes: { type: DataTypes.TEXT },
+    notes:{
+      type: DataTypes.TEXT,
+    },
     createdAt: {
+      allowNull: false,
       type: DataTypes.DATE,
-      allowNull: false
+      defaultValue: DataTypes.NOW,
     },
+    
   }, {
     sequelize,
     modelName: 'appointment',

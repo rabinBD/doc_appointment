@@ -18,7 +18,8 @@ module.exports = {
         references: {
           model: 'users', // This is the name of the table
           key: 'id', // This is the column name of the referenced table
-          onUpdate: 'cascade'
+          onUpdate: 'cascade',
+          onDelete: 'cascade',
         }
       },
       doctorId:{
@@ -26,7 +27,8 @@ module.exports = {
         references: {
           model: 'doctors', // This is the name of the table
           key: 'id', // This is the column name of the referenced table
-          onUpdate: 'cascade'
+          onUpdate: 'cascade',
+          onDelete: 'cascade',
         },
         type: Sequelize.INTEGER,
       },
@@ -35,7 +37,8 @@ module.exports = {
         references: {
           model: 'schedules', // This is the name of the table
           key: 'id', // This is the column name of the referenced table
-          onUpdate: 'cascade'
+          onUpdate: 'cascade',
+          onDelete: 'cascade',
         },
         type: Sequelize.INTEGER
       },
@@ -53,12 +56,12 @@ module.exports = {
         defaultValue: 'pending'
       },
       notes:{
-        allowNull: false,
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
       
     });

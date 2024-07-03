@@ -1,4 +1,7 @@
 'use strict';
+
+const { sequelize } = require('../models');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -11,33 +14,33 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      email:{
+      email: {
         type: Sequelize.STRING,
-        allowNull: false
       },
-      password:{
+      password: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      gender:{
-        type: Sequelize.ENUM('male','female','other'),
-        allowNull: false
+      gender: {
+        type: Sequelize.ENUM('male', 'female', 'other'),
+        allowNull: false,
       },
-      contact:{
-        type: Sequelize.INTEGER,
-        allowNull: false
+      contact: {
+        type: Sequelize.BIGINT,
+        allowNull: false,
       },
-      dateOfBirth:{
-        type: Sequelize.DATEONLY,
-        allowNull: false
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false
-      },
-    });
+        dateOfBirth: {
+          type: Sequelize.DATEONLY,
+          allowNull: false,
+        },
+        createdAt: {
+          type: Sequelize.DATE,
+          allowNull: false,
+          defaultValue: sequelize.NOW,
+        },
+      });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('users');
