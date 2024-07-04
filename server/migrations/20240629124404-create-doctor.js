@@ -9,35 +9,35 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      doctorName: {
+      DoctorName: {
         type: Sequelize.STRING,
         allowNull:false
       },
-      email:{
+      Email:{
         type: Sequelize.STRING,
         unique: true
       },
-      password:{
+      Password:{
         type: Sequelize.STRING,
         allowNull:false
       },
-      contact:{
+      Contact:{
         type: Sequelize.BIGINT,
         allowNull:false
       },
-      gender:{
+      Gender:{
         type: Sequelize.ENUM('male','female','other'),
         allowNull:false
       },
-      speciality:{
+      Speciality:{
         type: Sequelize.STRING,
         allowNull:false
       },
-      fees:{
+      Fees:{
         type: Sequelize.DOUBLE,
         allowNull:false
       },
-      createdAt: {
+      CreatedAt: {
         type: Sequelize.DATE,
         allowNull:false,
         defaultValue:Sequelize.NOW,
