@@ -17,18 +17,15 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'users', // This is the name of the table
-          key: 'id', // This is the column name of the referenced table
-          onUpdate: 'cascade',
-          onDelete: 'cascade',
-        }
-      },
+          key: 'id' // This is the column name of the referenced table
+      }
+    },
       doctorId:{
         allowNull: false,
         references: {
           model: 'doctors', // This is the name of the table
-          key: 'id', // This is the column name of the referenced table
-          onUpdate: 'cascade',
-          onDelete: 'cascade',
+          key: 'id' // This is the column name of the referenced table
+    
         },
         type: Sequelize.INTEGER,
       },
@@ -36,24 +33,23 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'schedules', // This is the name of the table
-          key: 'id', // This is the column name of the referenced table
-          onUpdate: 'cascade',
-          onDelete: 'cascade',
+          key: 'id' // This is the column name of the referenced table
+       
         },
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       date: {
         allowNull: false,
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATEONLY,
       },
       time:{
         allowNull: false,
-        type: Sequelize.TIME
+        type: Sequelize.TIME,
       },
       status:{
         allowNull: false,
         type: Sequelize.ENUM('pending','confirmed','cancelled') ,
-        defaultValue: 'pending'
+        defaultValue: 'pending',
       },
       notes:{
         type: Sequelize.TEXT,

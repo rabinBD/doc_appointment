@@ -11,36 +11,36 @@ module.exports = {
       },
       DoctorName: {
         type: Sequelize.STRING,
-        allowNull:false
+        allowNull:false,
       },
       Email:{
         type: Sequelize.STRING,
-        unique: true
+        unique: true,
       },
       Password:{
         type: Sequelize.STRING,
-        allowNull:false
+        allowNull:false,
       },
       Contact:{
         type: Sequelize.BIGINT,
-        allowNull:false
+        allowNull:false,
       },
       Gender:{
         type: Sequelize.ENUM('male','female','other'),
-        allowNull:false
+        allowNull:false,
       },
       Speciality:{
         type: Sequelize.STRING,
-        allowNull:false
+        allowNull:false,
       },
       Fees:{
         type: Sequelize.DOUBLE,
-        allowNull:false
+        allowNull:false,
       },
       CreatedAt: {
         type: Sequelize.DATE,
-        allowNull:false,
         defaultValue:Sequelize.NOW,
+        allowNull:false,
       },
     });
   },

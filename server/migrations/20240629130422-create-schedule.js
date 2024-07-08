@@ -21,15 +21,15 @@ module.exports = {
       },
       date:{
         allowNull: false,
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATEONLY,
       },
       startTime:{
         allowNull: false,
-        type: Sequelize.TIME
+        type: Sequelize.TIME,
       },
       endTime:{
         allowNull: false,
-        type: Sequelize.TIME
+        type: Sequelize.TIME,
       },
       createdAt: {
         allowNull: false,
@@ -39,7 +39,7 @@ module.exports = {
       status: {
         allowNull: false,
         type: Sequelize.ENUM('available','booked','unavailable'),
-        defaultValue: 'unavailable'
+        defaultValue: 'unavailable',
       }
     });
   },

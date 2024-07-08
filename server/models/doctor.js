@@ -14,35 +14,35 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   doctor.init({
-    doctorName: {
+    DoctorName: {
       type: DataTypes.STRING,
       allowNull:false
     },
-    email: {
+    Email: {
       type: DataTypes.STRING,
       unique: true
     },
-    password: {
+    Password: {
       type: DataTypes.STRING,
       allowNull:false
     },
-    contact: {
+    Contact: {
       type: DataTypes.BIGINT,
       allowNull:false
     },
-    gender: {
+    Gender: {
       type: DataTypes.ENUM('male', 'female', 'other'),
       allowNull:false
     },
-    speciality: {
+    Speciality: {
       type: DataTypes.STRING,
       allowNull:false
     },
-    fees:{
+    Fees:{
       type: DataTypes.DOUBLE,
       allowNull:false
     },
-    createdAt: {
+    CreatedAt: {
       type: DataTypes.DATE,
       allowNull:false,
       defaultValue: DataTypes.NOW,

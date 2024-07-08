@@ -103,7 +103,7 @@ const addDoctor = async (req, res) => {
             })
         }
 
-        const doctorExist = await doctor.findOne({where:{email: email}})
+        const doctorExist = await doctor.findOne({where:{Email: Email}})
         if (doctorExist) {
             return res.status(401).send({
                 success: false,
