@@ -72,4 +72,6 @@ const scheduleManage = async (req, res) => {
     }
 }
 
+
+
 module.exports = { scheduleManage, doctorloginCtrl }

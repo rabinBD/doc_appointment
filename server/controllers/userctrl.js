@@ -20,10 +20,11 @@ const usersignup = async (req, res) => {
 
         const exist_user = await user.findOne({ where: { email } });
         if (exist_user) {
-            return res.status(200).send({
+            return res.status(400).send({
                 success: false,
                 message: 'User already signed up, please login'
             });
+            
         }
 
         // Using bcrypt for encryption of password

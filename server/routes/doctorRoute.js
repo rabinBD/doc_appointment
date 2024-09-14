@@ -7,5 +7,6 @@ router.post('/login', doctorloginCtrl)
 
 //doctor manage schedule
 router.post('/schedule', scheduleManage)
+router.get('/doctors', scheduleManage)
 
 module.exports = router
