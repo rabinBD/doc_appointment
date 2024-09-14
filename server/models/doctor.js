@@ -22,16 +22,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: true
     },
-    Password: {
-      type: DataTypes.STRING,
-      allowNull:false
-    },
     Contact: {
       type: DataTypes.BIGINT,
-      allowNull:false
-    },
-    Gender: {
-      type: DataTypes.ENUM('male', 'female', 'other'),
       allowNull:false
     },
     Speciality: {
@@ -42,10 +34,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DOUBLE,
       allowNull:false
     },
-    CreatedAt: {
-      type: DataTypes.DATE,
-      allowNull:false,
-      defaultValue: DataTypes.NOW,
+    Date:{
+      type: DataTypes.DATEONLY,
+      allowNull:false
+    },
+    Time:{
+      type: DataTypes.TIME,
+      allowNull:false
+    },
+    status:{
+      type: DataTypes.INTEGER,
+      allowNull:false
     },
   }, {
     sequelize,

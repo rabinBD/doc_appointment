@@ -94,9 +94,8 @@ const patientHomeCtrl = async (req, res) => {
 //add new doctors in the system
 const addDoctor = async (req, res) => {
     try {
-        const { DoctorName, Email, Password, Contact, Gender, Speciality, Fees } = req.body;
-        const createdAt = new Date()
-        if (!DoctorName || !Email || !Password || !Contact || !Gender || !Speciality || !Fees) {
+        const { DoctorName, Email, Contact, Speciality, Fees, Date, Time, status } = req.body;
+        if (!DoctorName || !Email ||  !Contact ||  !Speciality || !Fees || !Date || !Time ) {
             return res.status(400).send({
                 success: false,
                 message: 'Please provide all the details'
@@ -110,7 +109,7 @@ const addDoctor = async (req, res) => {
                 message: 'doctor registered already'
             });
         }
-        const doctorRegister = await doctor.create({DoctorName, Email, Password, Contact, Gender, Speciality, Fees,createdAt})
+        const doctorRegister = await doctor.create({DoctorName, Email, Contact, Speciality, Fees, Date, Time, status})
         if (!doctorRegister) {
             return res.status(400).send({
                 success: false,

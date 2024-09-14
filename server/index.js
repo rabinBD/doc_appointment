@@ -12,7 +12,7 @@ app.use(morgan('dev'));
 
 // CORS configuration
 const corsOptions = {
-  origin: ['http://localhost','http://127.0.0.1:3001', 'http://10.0.2.2'], // Add allowed origins here
+  origin: ['http://localhost','http://127.0.0.1:3001', 'http://10.0.2.2'], 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };

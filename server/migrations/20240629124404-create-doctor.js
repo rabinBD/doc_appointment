@@ -17,16 +17,8 @@ module.exports = {
         type: Sequelize.STRING,
         unique: true,
       },
-      Password:{
-        type: Sequelize.STRING,
-        allowNull:false,
-      },
       Contact:{
         type: Sequelize.BIGINT,
-        allowNull:false,
-      },
-      Gender:{
-        type: Sequelize.ENUM('male','female','other'),
         allowNull:false,
       },
       Speciality:{
@@ -37,10 +29,17 @@ module.exports = {
         type: Sequelize.DOUBLE,
         allowNull:false,
       },
-      CreatedAt: {
-        type: Sequelize.DATE,
-        defaultValue:Sequelize.NOW,
-        allowNull:false,
+      Date:{
+        type: Sequelize.DATEONLY,
+        allowNull:false
+      },
+      Time:{
+        type: Sequelize.TIME,
+        allowNull:false
+      },
+      status:{
+        type: Sequelize.INTEGER,
+        allowNull:false
       },
     });
   },
